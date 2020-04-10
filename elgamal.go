@@ -13,7 +13,6 @@ func encrypt(p, alfa, B, m int, debug_bool bool) (float64, float64) {
 	B_ := float64(B)
 	m_ := float64(m)
 	a := rand.Intn(p)
-	a = 4
 	a_ := float64(a)
 	// Ke = (alfa^a)mod(p)
 	Ke := math.Mod( math.Pow(alfa_, a_) , p_)
@@ -76,7 +75,6 @@ func gcd_calc(a, b int) int {
 func sign(p, alfa, b, m int, debug_bool bool) (*big.Int, *big.Int) {
 	//  Ephemeral key is random
 	Ke   := rand.Intn(p-2)
-	Ke = 31
 	//gcd_ := 0
 	for gcd_calc(Ke, (p-1)) != 1 {
 		Ke = rand.Intn(p-2)
