@@ -67,4 +67,4 @@ go run elgamal.go --verify --p=541 --alfa=128 --B=239 --m=95 --r=280 --s=65 --de
 
 ## Note 
 
-This is a rewrite of (this repository)[https://github.com/ricardojoserf/elgamal-python] which has the same functionality but written in Python.
+This is a rewrite of [this repository](https://github.com/ricardojoserf/elgamal-python) which has the same functionality but written in Python.
