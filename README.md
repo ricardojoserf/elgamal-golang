@@ -11,7 +11,7 @@ Public and private keys are composed of 3 elements each:
 
 These parameters are:
 
-- p (parameter **--m**): A random integer
+- p (parameter **--p**): A random integer
 
 - alfa (parameter **--alfa**): A generator of Zp
 
