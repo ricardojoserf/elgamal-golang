@@ -3,23 +3,19 @@ import (
 	"fmt"
 	"flag"
 	"math/rand"
-	"math"
 	"math/big"
 )
 
-func encrypt(p, alfa, B, m int, debug_bool bool) (float64, float64) {
-	p_ := float64(p)
-	alfa_ := float64(alfa)
-	B_ := float64(B)
-	m_ := float64(m)
+
+func encrypt(p, alfa, B, m int, debug_bool bool) (*big.Int, *big.Int) {
 	a := rand.Intn(p)
-	a_ := float64(a)
+	var p_, alfa_, B_, m_, a_ = big.NewInt(int64(p)), big.NewInt(int64(alfa)), big.NewInt(int64(B)), big.NewInt(int64(m)), big.NewInt(int64(a))
 	// Ke = (alfa^a)mod(p)
-	Ke := math.Mod( math.Pow(alfa_, a_) , p_)
+	Ke := alfa_.Exp(alfa_, a_, p_)
 	// K = (B^a)mod(p)
-	K := math.Mod( math.Pow(B_, a_) , p_)
+	K :=  B_.Exp(B_, a_, p_)
 	// y = (x*K)mod(p)
-	y := math.Mod( (m_*K) , p_)
+	y := m_.Mod( m_.Mul(m_,K) , p_)
 	if debug_bool == true {
 		fmt.Printf("Plaintext message: %v\n", m_)
 		fmt.Printf("Public key:        (%v,%v,%v)\n", p_, alfa_, B_)
@@ -71,6 +67,7 @@ func gcd_calc(a, b int) int {
    }
    return bgcd(a, b, 1)
 }
+
 
 func sign(p, alfa, b, m int, debug_bool bool) (*big.Int, *big.Int) {
 	//  Ephemeral key is random
@@ -147,19 +144,19 @@ func main() {
     flag.Parse()
 	
 	if *encrypt_bool == true {
-		fmt.Println("Encrypting...")
+		//fmt.Println("Encrypting...")
 		Ke, y := encrypt(*p, *alfa, *B, *m, *debug_bool)
 		fmt.Printf("(Ke, y) = (%v,%v)\n", Ke, y)
 	} else if *decrypt_bool == true{
-		fmt.Println("Decrypting...")
+		//fmt.Println("Decrypting...")
 		x := decrypt(*p, *alfa, *b, *m, *Ke, *debug_bool)
 		fmt.Println(x)
 	} else if *sign_bool == true{
-		fmt.Println("Signing...")
+		//fmt.Println("Signing...")
 		r, s := sign(*p, *alfa, *b, *m, *debug_bool)
 		fmt.Printf("(r, s) = (%v,%v)\n", r, s)
 	} else if *verify_bool == true{
-		fmt.Println("Verifying...")
+		//fmt.Println("Verifying...")
 		verified := verify(*p, *alfa, *B, *m, *r, *s, *debug_bool)
 		fmt.Printf("Verification =  %v\n", verified)
 	}
