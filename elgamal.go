@@ -73,6 +73,7 @@ func sign(p, alfa, b, m int, debug_bool bool) (*big.Int, *big.Int) {
 	//  Ephemeral key is random
 	Ke   := rand.Intn(p-2)
 	//gcd_ := 0
+	// It is necessary that gcd(Ke, p-1) = 0 (or 1 in this case)
 	for gcd_calc(Ke, (p-1)) != 1 {
 		Ke = rand.Intn(p-2)
 		//fmt.Println(Ke)
@@ -125,40 +126,42 @@ func verify(p, alfa, B, m, r, s int, debug_bool bool) bool {
 
 
 func main() {
-    encrypt_bool := flag.Bool("encrypt", false, "Measure unique values of a metric.")
-    alfa := flag.Int("alfa", 1234, "help message for flagname")
-    p := flag.Int("p", 1234, "help message for flagname")
-    B := flag.Int("B", 1234, "help message for flagname")
-    
-    decrypt_bool := flag.Bool("decrypt", false, "Measure unique values of a metric.")
-    b := flag.Int("b", 1234, "help message for flagname")
-    Ke := flag.Int("Ke", 1234, "help message for flagname")
-
-    sign_bool := flag.Bool("sign", false, "Measure unique values of a metric.")
-    verify_bool := flag.Bool("verify", false, "Measure unique values of a metric.")
-    r := flag.Int("r", 1234, "help message for flagname")
-    s := flag.Int("s", 1234, "help message for flagname")
-    
-    m := flag.Int("m", 1234, "help message for flagname")
-    debug_bool := flag.Bool("debug", false, "Measure unique values of a metric.")
+	// Options flags
+    encrypt_bool := flag.Bool("encrypt", false, "Option to encrypt.")
+    decrypt_bool := flag.Bool("decrypt", false, "Option to decrypt.")
+    sign_bool := flag.Bool("sign", false, "Option to sign.")
+    verify_bool := flag.Bool("verify", false, "Option to verify.")
+    debug_bool := flag.Bool("debug", false, "Allow debugging.")
+    // Kpub, Kpriv flags
+    alfa := flag.Int("alfa", 1234, "Parameter alfa.")
+    p := flag.Int("p", 1234, "Parameter p.")
+    B := flag.Int("B", 1234, "Parameter B (public)")
+    b := flag.Int("b", 1234, "Parameter b (secret)")
+    // Values sent flags
+    Ke := flag.Int("Ke", 1234, "Ephemeral key")
+    m := flag.Int("m", 1234, "Message (to encrypt or decrypt)")
+    // Signature flags
+    r := flag.Int("r", 1234, "Parameter r (of the signature)")
+    s := flag.Int("s", 1234, "Parameter s (of the signature)")
     flag.Parse()
 	
 	if *encrypt_bool == true {
-		//fmt.Println("Encrypting...")
+		fmt.Println("Encrypting...")
 		Ke, y := encrypt(*p, *alfa, *B, *m, *debug_bool)
 		fmt.Printf("(Ke, y) = (%v,%v)\n", Ke, y)
 	} else if *decrypt_bool == true{
-		//fmt.Println("Decrypting...")
+		fmt.Println("Decrypting...")
 		x := decrypt(*p, *alfa, *b, *m, *Ke, *debug_bool)
 		fmt.Println(x)
 	} else if *sign_bool == true{
-		//fmt.Println("Signing...")
+		fmt.Println("Signing...")
 		r, s := sign(*p, *alfa, *b, *m, *debug_bool)
 		fmt.Printf("(r, s) = (%v,%v)\n", r, s)
 	} else if *verify_bool == true{
-		//fmt.Println("Verifying...")
+		fmt.Println("Verifying...")
 		verified := verify(*p, *alfa, *B, *m, *r, *s, *debug_bool)
 		fmt.Printf("Verification =  %v\n", verified)
 	}
 
+	
 }
